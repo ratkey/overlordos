@@ -2,16 +2,18 @@
 
 import { Model } from "@/hooks/models";
 import { useGemini } from "@/hooks/useGemini";
+import { useTTS } from "@/hooks/useTTS";
 import { SubmitEvent, useState } from "react";
 
 export const Prompter = ({ model }: { model: Model }) => {
   const { request, loading, response, error } = useGemini(model);
+  const { vanillaSpeak } = useTTS();
   const [prompt, setPrompt] = useState("");
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (prompt) {
-      request(prompt);
+      request(prompt, vanillaSpeak);
     }
   };
 

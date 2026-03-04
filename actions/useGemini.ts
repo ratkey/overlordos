@@ -9,7 +9,7 @@ const ai = new GoogleGenAI({
 
 export async function askGemini(prompt: string, model: Model) {
   try {
-    const result = await ai.models.generateContent({
+    const response = await ai.models.generateContentStream({
       model: "gemini-3-flash-preview",
       contents: prompt,
       config: {
@@ -17,7 +17,13 @@ export async function askGemini(prompt: string, model: Model) {
       },
     });
 
-    return { text: result.text ?? "", error: null };
+    let text = "";
+    for await (const chunk of response) {
+      console.log(chunk.text);
+      text += chunk.text;
+    }
+
+    return { text: text ?? "", error: null };
   } catch (error) {
     console.error("Gemini Error:", error);
     return { text: null, error: "Failed to generate response." };

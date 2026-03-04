@@ -7,7 +7,10 @@ export const useGemini = (model: Model) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const request = async (prompt: string) => {
+  const request = async (
+    prompt: string,
+    onSuccess?: (response: string | null) => void,
+  ) => {
     setLoading(true);
     setError("");
     try {
@@ -19,6 +22,7 @@ export const useGemini = (model: Model) => {
       }
 
       setResponse(result.text ?? "");
+      onSuccess?.(result.text);
     } catch (error) {
       console.error(error);
       setError("An unexpected error occurred.");
