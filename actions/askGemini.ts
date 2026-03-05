@@ -1,27 +1,42 @@
 "use server";
-
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type Content } from "@google/genai";
 import { models, type Model } from "@/hooks/models";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-export async function askGemini(prompt: string, model: Model) {
+export async function askGemini(
+  prompt: string,
+  model: Model,
+  history: Content[] = [],
+) {
   try {
-    console.log(models[model]);
+    const contents: Content[] = [
+      ...history,
+      { role: "user", parts: [{ text: prompt }] },
+    ];
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt,
+      contents,
       config: {
         systemInstruction: models[model],
       },
     });
 
-    return { text: response.text ?? "", error: null };
+    const assistantMessage: Content = {
+      role: "model",
+      parts: [{ text: response.text ?? "" }],
+    };
+
+    return {
+      text: response.text ?? "",
+      history: [...contents, assistantMessage],
+      error: null,
+    };
   } catch (error) {
     console.error("Gemini Error:", error);
-    return { text: null, error: "Failed to generate response." };
+    return { text: null, history, error: "Failed to generate response." };
   }
 }

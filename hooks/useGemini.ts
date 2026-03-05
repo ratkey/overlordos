@@ -1,8 +1,10 @@
 import { askGemini } from "@/actions/askGemini";
 import { useState } from "react";
 import { Model } from "./models";
+import { Content } from "@google/genai";
 
 export const useGemini = (model: Model) => {
+  const [history, setHistory] = useState<Content[]>();
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,7 +16,7 @@ export const useGemini = (model: Model) => {
     setLoading(true);
     setError("");
     try {
-      const result = await askGemini(prompt, model);
+      const result = await askGemini(prompt, model, history);
 
       if (result.error) {
         setError(result.error);
@@ -22,6 +24,7 @@ export const useGemini = (model: Model) => {
       }
 
       setResponse(result.text ?? "");
+      setHistory(result.history);
       onSuccess?.(result.text);
     } catch (error) {
       console.error(error);
