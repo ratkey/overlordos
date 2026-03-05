@@ -1,3 +1,4 @@
+"use client";
 import { Prompter } from "@/components/Prompter";
 
 export default function Home() {

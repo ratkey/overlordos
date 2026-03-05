@@ -1,4 +1,4 @@
-import { askGemini } from "@/actions/useGemini";
+import { askGemini } from "@/actions/askGemini";
 import { useState } from "react";
 import { Model } from "./models";
 

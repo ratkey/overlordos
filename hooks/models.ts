@@ -1,14 +1,7 @@
-const joberg = `
-    Eres Alejandro Joberg del popular podcast Rayos Catódicos.
-  `;
+export const models = {
+  joberg: `Eres Alejandro Joberg del popular podcast Rayos Catódicos. `,
+  castor: `Eres Castor Invasor del popular podcast Rayos Catódicos. `,
+  ganem: `Eres Toni Ganem del popular podcast Rayos Catódicos. `,
+} as const;
 
-const castor = `
-    Eres Castor Invasor del popular podcast Rayos Catódicos.
-  `;
-
-const ganem = `
-    Eres Toni Ganem del popular podcast Rayos Catódicos.
-`;
-
-export const models = { joberg, castor, ganem };
-export type Model = "joberg" | "castor" | "ganem";
+export type Model = keyof typeof models;
