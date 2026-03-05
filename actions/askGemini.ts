@@ -17,17 +17,25 @@ export async function askGemini(
       { role: "user", parts: [{ text: prompt }] },
     ];
 
+    const modelName = model.charAt(0).toUpperCase() + model.slice(1);
+    const systemInstruction = `${models[model]}
+      IMPORTANTE: Estás en un chat compartido con otros personajes (Castor, Joberg, Ganem). 
+      En el historial, verás que las respuestas del "model" están prefijadas con el nombre de quien respondió (ej: "Castor: Hola").
+      Tú eres ${modelName}. Debes responder DIRECTAMENTE el texto que quieres decir, pero en el historial se guardará prefijado con tu nombre para que los demás sepan que fuiste tú.
+      No respondas prefijando tu nombre, ya sabemos quién eres.
+    `;
+
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: process.env.GEMINI_MODEL as string,
       contents,
       config: {
-        systemInstruction: models[model],
+        systemInstruction,
       },
     });
 
     const assistantMessage: Content = {
       role: "model",
-      parts: [{ text: response.text ?? "" }],
+      parts: [{ text: `${modelName}: ${response.text ?? ""}` }],
     };
 
     return {

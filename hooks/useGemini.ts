@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Model } from "./models";
 
 export const useGemini = () => {
-  const [history, setHistory] = useState<Content[]>();
+  const [history, setHistory] = useState<Content[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [responses, setResponses] = useState<Responses>({
