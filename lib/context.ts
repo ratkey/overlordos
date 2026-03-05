@@ -7,7 +7,7 @@ export type Prompts = Record<Model, string> & Record<"all", string>;
 interface AppContextType {
   responses: Responses;
   prompts: Prompts;
-  handleSubmit: (formData: FormData, model: Model) => void;
+  handleSubmit: (formData: FormData, model: Model | "all") => void;
 }
 
 export const AppContext = createContext<AppContextType>({

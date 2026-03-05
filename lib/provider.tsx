@@ -24,7 +24,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const handleSubmit = async (formData: FormData, model: Model) => {
+  const handleSubmit = async (formData: FormData, model: Model | "all") => {
     const prompt = formData.get("prompt") as string;
     if (!prompt) return;
     setPrompts((prev) => ({ ...prev, [model]: prompt }));
