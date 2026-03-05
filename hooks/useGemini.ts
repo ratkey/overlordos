@@ -1,16 +1,22 @@
 import { askGemini } from "@/actions/askGemini";
+import { Responses } from "@/lib/context";
+import { Content } from "@google/genai";
 import { useState } from "react";
 import { Model } from "./models";
-import { Content } from "@google/genai";
 
-export const useGemini = (model: Model) => {
+export const useGemini = () => {
   const [history, setHistory] = useState<Content[]>();
-  const [response, setResponse] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [responses, setResponses] = useState<Responses>({
+    castor: "",
+    joberg: "",
+    ganem: "",
+  });
 
   const request = async (
     prompt: string,
+    model: Model,
     onSuccess?: (response: string | null) => void,
   ) => {
     setLoading(true);
@@ -23,7 +29,7 @@ export const useGemini = (model: Model) => {
         return;
       }
 
-      setResponse(result.text ?? "");
+      setResponses((prev) => ({ ...prev, [model]: result.text ?? "" }));
       setHistory(result.history);
       onSuccess?.(result.text);
     } catch (error) {
@@ -34,5 +40,5 @@ export const useGemini = (model: Model) => {
     }
   };
 
-  return { request, response, error, loading };
+  return { request, responses, error, loading };
 };
